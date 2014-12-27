@@ -42,3 +42,6 @@ libOSCConfig uses the following libraries.
 
 * liboscpack_1_1_0-vc12
   * https://github.com/yoggy/liboscpack_1_1_0-vc12
+
+* boost 1.56.0
+  * http://www.boost.org/
