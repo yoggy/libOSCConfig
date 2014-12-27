@@ -1,0 +1,1 @@
+copy OSCConfig.h ..\..\include
