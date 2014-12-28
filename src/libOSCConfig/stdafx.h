@@ -19,6 +19,8 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include "osc/OscReceivedElements.h"
 #include "osc/OscPrintReceivedElements.h"
 #include "osc/OscOutboundPacketStream.h"

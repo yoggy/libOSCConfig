@@ -20,6 +20,9 @@ public:
 	OSCConfig();
 	virtual ~OSCConfig();
 
+	bool debug_mode() const;
+	void debug_mode(const bool &val);
+
 	bool start(const unsigned short &port);
 	bool start_kvs_mode(const unsigned short &port);
 	void stop();

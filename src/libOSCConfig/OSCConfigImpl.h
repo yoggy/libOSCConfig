@@ -10,6 +10,9 @@ public:
 	OSCConfigImpl();
 	virtual ~OSCConfigImpl();
 
+	bool debug_mode() const;
+	void debug_mode(const bool &val);
+
 	bool start(const unsigned short &port);
 	bool start_kvs_mode(const unsigned short &port);
 	void stop();
@@ -36,5 +39,6 @@ public:
 protected:
 	Config config_;
 	OSCThread *osc_thread_;
+	bool debug_mode_;
 };
 

@@ -17,6 +17,16 @@ LIB_OSCCONFIG_API OSCConfig::~OSCConfig()
 	}
 }
 
+LIB_OSCCONFIG_API bool OSCConfig::debug_mode() const
+{
+	return impl_->debug_mode();
+}
+
+LIB_OSCCONFIG_API void OSCConfig::debug_mode(const bool &val)
+{
+	impl_->debug_mode(val);
+}
+
 LIB_OSCCONFIG_API bool OSCConfig::start(const unsigned short &port)
 {
 	return impl_->start(port);

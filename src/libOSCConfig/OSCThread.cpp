@@ -3,15 +3,45 @@
 #include "Config.h"
 #include "OSCThread.h"
 
-#include "osc/OscOutboundPacketStream.h"
+std::string get_local_time_str_()
+{
+	boost::posix_time::ptime p = boost::posix_time::microsec_clock::universal_time();
+	return boost::posix_time::to_iso_extended_string(p) + "Z";
+}
 
-OSCThread::OSCThread(Config *cf) : port_(0), cf_(cf), break_flag_(false), thread_(nullptr), osc_recv_socket_(nullptr)
+std::string get_address_str_(const unsigned long &addr)
+{
+	std::stringstream ss;
+
+	int a0 = (addr & 0xff000000) >> 24;
+	int a1 = (addr & 0x00ff0000) >> 16;
+	int a2 = (addr & 0x0000ff00) >> 8;
+	int a3 = (addr & 0x000000ff) >> 0;
+
+	ss << a0 << "." << a1 << "." << a2 << "." << a3;
+
+	return ss.str();
+}
+
+OSCThread::OSCThread(Config *cf) 
+	: port_(0), cf_(cf), break_flag_(false), debug_mode_(false), 
+	thread_(nullptr), osc_recv_socket_(nullptr)
 {
 }
 
 OSCThread::~OSCThread()
 {
 	if (is_open()) stop();
+}
+
+bool OSCThread::debug_mode() const
+{
+	return debug_mode_;
+}
+
+void OSCThread::debug_mode(const bool &val)
+{
+	debug_mode_ = val;
 }
 
 bool OSCThread::is_open()
@@ -67,6 +97,22 @@ void OSCThread::stop()
 
 	delete osc_recv_socket_;
 	osc_recv_socket_ = nullptr;
+}
+
+void OSCThread::ProcessPacket(const char *data, int size, const IpEndpointName& remoteEndpoint)
+{
+	osc::ReceivedPacket p(data, size);
+
+	if (debug_mode_) {
+		std::cout << get_local_time_str_() <<  ",debug,recv," << p;
+	}
+
+	if (p.IsBundle()) {
+		ProcessBundle(osc::ReceivedBundle(p), remoteEndpoint);
+	}
+	else {
+		ProcessMessage(osc::ReceivedMessage(p), remoteEndpoint);
+	}
 }
 
 void OSCThread::ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
@@ -167,6 +213,11 @@ void OSCThread::reply_config_key_value_(const osc::ReceivedMessage& msg, const I
 		else {
 			printf("OSCThread::reply_config_() : invalid argument typet...please set arg0 as the key string...\n", path.c_str());
 			return;
+		}
+
+		if (debug_mode_) {
+			std::string reply_host = get_address_str_(endpoint.address);
+			printf("%s,debug,send,%s:%d,%s,%s\n", get_local_time_str_().c_str(), reply_host.c_str(), reply_port, key.c_str(), cf_->get_string(key).c_str());
 		}
 
 		//

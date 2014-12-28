@@ -12,6 +12,9 @@ public:
 	OSCThread(Config *cf);
 	virtual ~OSCThread();
 
+	bool debug_mode() const;
+	void debug_mode(const bool &val);
+
 	bool is_open();
 
 	bool start(const unsigned short &port);
@@ -19,6 +22,7 @@ public:
 	void run();
 	void stop();
 
+	virtual void ProcessPacket(const char *data, int size, const IpEndpointName& remoteEndpoint);
 	virtual void ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
 
 protected:
@@ -29,6 +33,7 @@ protected:
 	unsigned short port_;
 	Config *cf_;
 	bool break_flag_;
+	bool debug_mode_;
 
 	boost::thread *thread_;
 	UdpListeningReceiveSocket *osc_recv_socket_;

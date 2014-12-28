@@ -2,7 +2,7 @@
 #include "Config.h"
 #include "OscConfigImpl.h"
 
-OSCConfigImpl::OSCConfigImpl() : osc_thread_(nullptr)
+OSCConfigImpl::OSCConfigImpl() : osc_thread_(nullptr), debug_mode_(false)
 {
 
 }
@@ -12,10 +12,26 @@ OSCConfigImpl::~OSCConfigImpl()
 
 }
 
+bool OSCConfigImpl::debug_mode() const
+{
+	return debug_mode_;
+}
+
+void OSCConfigImpl::debug_mode(const bool &val)
+{
+	if (osc_thread_) {
+		osc_thread_->debug_mode(val);
+	}
+	debug_mode_ = val;
+}
+
 bool OSCConfigImpl::start(const unsigned short &port)
 {
 	if (osc_thread_) return false;
+
 	osc_thread_ = new OSCThread(&config_);
+	osc_thread_->debug_mode(debug_mode_);
+
 	bool rv = osc_thread_->start(port);
 	if (rv == false) {
 		delete osc_thread_;
@@ -28,7 +44,10 @@ bool OSCConfigImpl::start(const unsigned short &port)
 bool OSCConfigImpl::start_kvs_mode(const unsigned short &port)
 {
 	if (osc_thread_) return false;
+
 	osc_thread_ = new OSCThread(&config_);
+	osc_thread_->debug_mode(debug_mode_);
+
 	bool rv = osc_thread_->start_kvs_mode(port);
 
 	delete osc_thread_;
