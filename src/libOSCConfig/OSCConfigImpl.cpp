@@ -12,6 +12,16 @@ OSCConfigImpl::~OSCConfigImpl()
 
 }
 
+std::string OSCConfigImpl::filename()
+{
+	return cf_.filename();
+}
+
+void OSCConfigImpl::filename(const std::string &val)
+{
+	cf_.filename(val);
+}
+
 bool OSCConfigImpl::debug_mode() const
 {
 	return debug_mode_;
@@ -29,7 +39,7 @@ bool OSCConfigImpl::start(const unsigned short &port)
 {
 	if (osc_thread_) return false;
 
-	osc_thread_ = new OSCThread(&config_);
+	osc_thread_ = new OSCThread(&cf_);
 	osc_thread_->debug_mode(debug_mode_);
 
 	bool rv = osc_thread_->start(port);
@@ -45,7 +55,7 @@ bool OSCConfigImpl::start_kvs_mode(const unsigned short &port)
 {
 	if (osc_thread_) return false;
 
-	osc_thread_ = new OSCThread(&config_);
+	osc_thread_ = new OSCThread(&cf_);
 	osc_thread_->debug_mode(debug_mode_);
 
 	bool rv = osc_thread_->start_kvs_mode(port);
@@ -63,62 +73,62 @@ void OSCConfigImpl::stop()
 	}
 }
 
-bool OSCConfigImpl::save(const std::string &filename)
+bool OSCConfigImpl::save()
 {
-	return config_.save(filename);
+	return cf_.save();
 }
 
-bool OSCConfigImpl::load(const std::string &filename)
+bool OSCConfigImpl::load()
 {
-	return config_.load(filename);
+	return cf_.load();
 }
 
 void OSCConfigImpl::clear()
 {
-	config_.clear();
+	cf_.clear();
 }
 
 bool OSCConfigImpl::has_key(const std::string &key)
 {
-	return config_.has_key(key);
+	return cf_.has_key(key);
 }
 
 bool OSCConfigImpl::get_bool(const std::string &key, const bool &default_value)
 {
-	return config_.get_bool(key, default_value);
+	return cf_.get_bool(key, default_value);
 }
 
 void OSCConfigImpl::set_bool(const std::string &key, const bool &value)
 {
-	config_.set_bool(key, value);
+	cf_.set_bool(key, value);
 }
 
 int OSCConfigImpl::get_int(const std::string &key, const int &default_value)
 {
-	return config_.get_int(key, default_value);
+	return cf_.get_int(key, default_value);
 }
 
 void OSCConfigImpl::set_int(const std::string &key, const int &value)
 {
-	return config_.set_int(key, value);
+	return cf_.set_int(key, value);
 }
 
 float OSCConfigImpl::get_float(const std::string &key, const float &default_value)
 {
-	return config_.get_float(key, default_value);
+	return cf_.get_float(key, default_value);
 }
 
 void OSCConfigImpl::set_float(const std::string &key, const float &value)
 {
-	config_.set_float(key, value);
+	cf_.set_float(key, value);
 }
 
 std::string OSCConfigImpl::get_string(const std::string &key, const std::string &default_value)
 {
-	return config_.get_string(key, default_value);
+	return cf_.get_string(key, default_value);
 }
 
 void OSCConfigImpl::set_string(const std::string &key, const std::string &value)
 {
-	config_.set_string(key, value);
+	cf_.set_string(key, value);
 }

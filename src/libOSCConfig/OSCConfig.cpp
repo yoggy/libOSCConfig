@@ -17,6 +17,16 @@ LIB_OSCCONFIG_API OSCConfig::~OSCConfig()
 	}
 }
 
+LIB_OSCCONFIG_API std::string OSCConfig::filename()
+{
+	return impl_->filename();
+}
+
+LIB_OSCCONFIG_API void OSCConfig::filename(const std::string &val)
+{
+	impl_->filename(val);
+}
+
 LIB_OSCCONFIG_API bool OSCConfig::debug_mode() const
 {
 	return impl_->debug_mode();
@@ -42,14 +52,14 @@ LIB_OSCCONFIG_API void OSCConfig::stop()
 	impl_->stop();
 }
 
-LIB_OSCCONFIG_API bool OSCConfig::save(const std::string &filename)
+LIB_OSCCONFIG_API bool OSCConfig::save()
 {
-	return impl_->save(filename);
+	return impl_->save();
 }
 
-LIB_OSCCONFIG_API bool OSCConfig::load(const std::string &filename)
+LIB_OSCCONFIG_API bool OSCConfig::load()
 {
-	return impl_->load(filename);
+	return impl_->load();
 }
 
 LIB_OSCCONFIG_API bool OSCConfig::get_bool(const std::string &key, const bool &default_value)

@@ -20,6 +20,9 @@ public:
 	OSCConfig();
 	virtual ~OSCConfig();
 
+	std::string filename();
+	void filename(const std::string &val);
+
 	bool debug_mode() const;
 	void debug_mode(const bool &val);
 
@@ -27,8 +30,8 @@ public:
 	bool start_kvs_mode(const unsigned short &port);
 	void stop();
 
-	bool save(const std::string &filename);
-	bool load(const std::string &filename);
+	bool save();
+	bool load();
 
 	void clear();
 

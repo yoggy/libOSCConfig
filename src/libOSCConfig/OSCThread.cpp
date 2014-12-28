@@ -56,11 +56,11 @@ bool OSCThread::open_(const unsigned short &port)
 		osc_recv_socket_ = new UdpListeningReceiveSocket(IpEndpointName(IpEndpointName::ANY_ADDRESS, port), this);
 	}
 	catch (osc::Exception& e) {
-		printf("OSCThread::open() : osc::Exception!!! e.what()=%s", e.what());
+		printf("OSCThread::open_() : osc::Exception!!! port %d already in use...e.what()=%s\n", port, e.what());
 		return false;
 	}
 	catch (...) {
-		printf("OSCThread::open() : Exception!!! ");
+		printf("OSCThread::open_() : Exception!!! port %d already in use...\n", port);
 		return false;
 	}
 	return true;
@@ -104,18 +104,23 @@ void OSCThread::ProcessPacket(const char *data, int size, const IpEndpointName& 
 	osc::ReceivedPacket p(data, size);
 
 	if (debug_mode_) {
-		std::cout << get_local_time_str_() <<  ",debug,recv," << p;
+		std::cout << get_local_time_str_() << ",debug,recv,from=" << get_address_str_(remoteEndpoint.address) << ":" << remoteEndpoint.port << "," << p;
 	}
 
 	if (p.IsBundle()) {
 		ProcessBundle(osc::ReceivedBundle(p), remoteEndpoint);
 	}
 	else {
-		ProcessMessage(osc::ReceivedMessage(p), remoteEndpoint);
+		ProcessMessage(p, osc::ReceivedMessage(p), remoteEndpoint);
 	}
 }
 
 void OSCThread::ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
+{
+	// dummy...
+}
+
+void OSCThread::ProcessMessage(const osc::ReceivedPacket &p, const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
 {
 	try{
 		std::string path = std::string(msg.AddressPattern());
@@ -125,10 +130,22 @@ void OSCThread::ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpoint
 			reply_config_key_value_(msg, remoteEndpoint);
 			return;
 		}
+		else if (path == "/save") {
+			save_config_(msg, remoteEndpoint);
+			return;
+		}
+		else if (path == "/load") {
+			load_config_(msg, remoteEndpoint);
+			return;
+		}
 
 		std::string key = path;
 		osc::ReceivedMessage::const_iterator arg = msg.ArgumentsBegin();
-		
+		if (arg == msg.ArgumentsEnd()) {
+			std::cout << get_local_time_str_() << ",error,recv invalid format packet...,from=" << get_address_str_(remoteEndpoint.address) << ":" << remoteEndpoint.port << "," << p;
+			return;
+		}
+
 		if (arg->IsBool()) {
 			bool value = arg->AsBool();
 			cf_->set_bool(key, value);
@@ -217,7 +234,7 @@ void OSCThread::reply_config_key_value_(const osc::ReceivedMessage& msg, const I
 
 		if (debug_mode_) {
 			std::string reply_host = get_address_str_(endpoint.address);
-			printf("%s,debug,send,%s:%d,%s,%s\n", get_local_time_str_().c_str(), reply_host.c_str(), reply_port, key.c_str(), cf_->get_string(key).c_str());
+			printf("%s,debug,send,to=%s:%d,addr=%s,val=%s\n", get_local_time_str_().c_str(), reply_host.c_str(), reply_port, key.c_str(), cf_->get_string(key).c_str());
 		}
 
 		//
@@ -261,4 +278,16 @@ void OSCThread::reply_config_key_value_(const osc::ReceivedMessage& msg, const I
 	catch (osc::Exception& e) {
 		printf("OSCThread::ProcessMessage() : osc::Exception!!!...e.what()=\n", e.what());
 	}
+}
+
+void OSCThread::save_config_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
+{
+	bool rv = cf_->save();
+	printf("%s,debug,save,filename=%s,result=%s\n", get_local_time_str_().c_str(), cf_->filename().c_str(), rv ? "true" : "false");
+}
+
+void OSCThread::load_config_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
+{
+	bool rv = cf_->load();
+	printf("%s,debug,load,filename=%s,result=%s\n", get_local_time_str_().c_str(), cf_->filename().c_str(), rv ? "true" : "false");
 }

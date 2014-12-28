@@ -26,6 +26,18 @@ Config::~Config(void)
 
 }
 
+std::string Config::filename() const
+{
+	return filename_;
+}
+
+void Config::filename(const std::string &val)
+{
+	boost::mutex::scoped_lock scl(mutex_);
+
+	filename_ = val;
+}
+
 void Config::clear()
 {
 	map_.clear();
@@ -39,17 +51,17 @@ void Config::write_pt_(boost::property_tree::ptree &pt)
 	}
 }
 
-bool Config::save(const std::string &filename) {
+bool Config::save() {
 	boost::mutex::scoped_lock scl(mutex_);
 
 	boost::property_tree::ptree pt;
 	write_pt_(pt);
 
 	try {
-		boost::property_tree::json_parser::write_json(filename, pt);
+		boost::property_tree::json_parser::write_json(filename_, pt);
 	}
 	catch(...) {
-		std::cout << "error : save() : write_json() failed...filename=" << filename.c_str() << std::endl;
+		std::cout << "error : save() : write_json() failed...filename=" << filename_.c_str() << std::endl;
 		return false;
 	}
 
@@ -61,21 +73,21 @@ void Config::read_pt_(boost::property_tree::ptree &pt)
 	BOOST_FOREACH(const boost::property_tree::ptree::value_type& child, pt) {
 		std::string key = child.first;
 		std::string val = pt.get<std::string>(key);
-		set_string(key, val);
+		map_[key] = val;
 	}
 }
 
-bool Config::load(const std::string &filename) {
+bool Config::load() {
 	boost::mutex::scoped_lock scl(mutex_);
 
 	clear();
 	boost::property_tree::ptree pt;
 
 	try {
-		boost::property_tree::json_parser::read_json(filename, pt);
+		boost::property_tree::json_parser::read_json(filename_, pt);
 	}
 	catch(...) {
-		std::cout << "error : load() : read_json() failed...filename=" << filename.c_str() << std::endl;
+		std::cout << "error : load() : read_json() failed...filename=" << filename_.c_str() << std::endl;
 		return false;
 	}
 
@@ -123,14 +135,12 @@ void Config::set_float(const std::string &key, const float &value) {
 }
 
 std::string Config::get_string(const std::string &key, const std::string &default_val) {
-	if (has_key_(key) == false) return default_val;
 	boost::mutex::scoped_lock scl(mutex_);
-
+	if (has_key_(key) == false) return default_val;
 	return map_[key];
 }
 
 void Config::set_string(const std::string &key, const std::string &value) {
 	boost::mutex::scoped_lock scl(mutex_);
-
 	map_[key] = value;
 }

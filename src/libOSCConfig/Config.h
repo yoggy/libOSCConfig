@@ -14,11 +14,13 @@ public:
 	Config();
 	virtual ~Config(void);
 
+	std::string filename() const;
+	void filename(const std::string &val);
+
 	void clear();
 
-	bool save(const std::string &filename);
-
-	bool load(const std::string &filename);
+	bool save();
+	bool load();
 
 	bool has_key(const std::string &key);
 
@@ -40,6 +42,7 @@ protected:
 	bool has_key_(const std::string &key);
 
 protected:
+	std::string filename_;
 	std::map<std::string, std::string> map_;
 	boost::mutex mutex_;
 };

@@ -24,10 +24,13 @@ public:
 
 	virtual void ProcessPacket(const char *data, int size, const IpEndpointName& remoteEndpoint);
 	virtual void ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
+	virtual void ProcessMessage(const osc::ReceivedPacket &p, const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
 
 protected:
 	bool open_(const unsigned short &port);
 	void reply_config_key_value_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
+	void save_config_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
+	void load_config_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
 
 protected:
 	unsigned short port_;
