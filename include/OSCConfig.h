@@ -21,6 +21,7 @@ public:
 	virtual ~OSCConfig();
 
 	bool start(const unsigned short &port);
+	bool start_kvs_mode(const unsigned short &port);
 	void stop();
 
 	bool save(const std::string &filename);

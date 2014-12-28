@@ -22,6 +22,11 @@ LIB_OSCCONFIG_API bool OSCConfig::start(const unsigned short &port)
 	return impl_->start(port);
 }
 
+LIB_OSCCONFIG_API bool OSCConfig::start_kvs_mode(const unsigned short &port)
+{
+	return impl_->start_kvs_mode(port);
+}
+
 LIB_OSCCONFIG_API void OSCConfig::stop()
 {
 	impl_->stop();

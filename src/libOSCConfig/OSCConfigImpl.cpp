@@ -16,7 +16,7 @@ bool OSCConfigImpl::start(const unsigned short &port)
 {
 	if (osc_thread_) return false;
 	osc_thread_ = new OSCThread(&config_);
-	bool rv = osc_thread_->open(port);
+	bool rv = osc_thread_->start(port);
 	if (rv == false) {
 		delete osc_thread_;
 		return false;
@@ -25,10 +25,20 @@ bool OSCConfigImpl::start(const unsigned short &port)
 	return true;
 }
 
+bool OSCConfigImpl::start_kvs_mode(const unsigned short &port)
+{
+	if (osc_thread_) return false;
+	osc_thread_ = new OSCThread(&config_);
+	bool rv = osc_thread_->start_kvs_mode(port);
+
+	delete osc_thread_;
+	return rv;
+}
+
 void OSCConfigImpl::stop()
 {
 	if (osc_thread_) {
-		osc_thread_->close();
+		osc_thread_->stop();
 		delete osc_thread_;
 		osc_thread_ = nullptr;
 	}

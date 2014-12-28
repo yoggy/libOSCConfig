@@ -10,6 +10,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sample1-main.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{82728188-DD12-44BE-A4C4-1D0A3DFE5192}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -90,9 +93,6 @@
       <Path>$(ProjectDir)\..\..\..\_obj\$(ProjectName)\$(Platform)\$(Configuration)\$(MSBuildProjectName).log</Path>
     </BuildLog>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="sample-main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

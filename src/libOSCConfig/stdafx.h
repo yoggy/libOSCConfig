@@ -4,6 +4,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#pragma warning(disable : 4996)
+
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/lexical_cast.hpp>
@@ -12,8 +14,14 @@
 #include <boost/foreach.hpp>
 #include <boost/optional.hpp>
 
+#include <boost/algorithm/string.hpp>  
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/range/algorithm/for_each.hpp>
+
 #include "osc/OscReceivedElements.h"
 #include "osc/OscPrintReceivedElements.h"
+#include "osc/OscOutboundPacketStream.h"
 #include "ip/UdpSocket.h"
 #include "ip/PacketListener.h"
 
@@ -24,3 +32,4 @@
 #endif
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "winmm.lib")
+

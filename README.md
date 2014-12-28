@@ -1,10 +1,13 @@
 libOSCConfig
 ====
-libOSCConfig is Simple KVS server using liboscpack.
+libOSCConfig is simple KVS server using liboscpack.
 
-Usage
+usage
 ====
-sample-main.cpp
+
+store
+----
+sample1-main.cpp
 <pre>
 #include "OSCConfig.h"
 
@@ -30,13 +33,77 @@ int main(int argc, char* argv[])
 
 sendosc.exe
 <pre>
-> sendosc.exe localhost 12345 /test/bool b true
-> sendosc.exe localhost 12345 /test/int i 12345
-> sendosc.exe localhost 12345 /test/float 1234.5
-> sendosc.exe localhost 12345 /test/string s teststring...
+&gt; sendosc.exe localhost 12345 /test/bool b true
+&gt; sendosc.exe localhost 12345 /test/int i 12345
+&gt; sendosc.exe localhost 12345 /test/float 1234.5
+&gt; sendosc.exe localhost 12345 /test/string s teststring...
 </pre>
 
-Libraries
+
+kvs server mode
+----
+![image.png](image.png)
+
+sample2-main.cpp
+<pre>
+#include "OSCConfig.h"
+
+void main()
+{
+	OSCConfig config;
+	config.start_kvs_mode(12345);
+}
+</pre>
+
+sendosc.exe (set key-value)
+<pre>
+&gt; sendosc.exe localhost 12345 /test/a i 123
+&gt; sendosc.exe localhost 12345 /test/b f 1234.5
+&gt; sendosc.exe localhost 12345 /test/c s testtest
+  .
+  .
+  .
+</pre>
+
+sendosc.exe (get key-value)
+<pre>
+&gt; sendosc.exe localhost 12345 /get/int/7000 s /test/a
+&gt; sendosc.exe localhost 12345 /get/float/7000 s /test/b
+&gt; sendosc.exe localhost 12345 /get/string/7000 s /test/c
+  .
+  .
+  .
+
+  magic address pattern :
+      /get/[type]
+      /get/[type]/[port]
+      /get/[type]/[port]/[host]
+
+      type : int, float, bool, string
+      port : reply port
+      host : reply hostmame (or address)
+
+  argument :
+      arg0 (string)  the key of an element in the OSCConfig.
+
+</pre>
+
+oscdump.exe
+<pre>
+&gt; oscdump.exe
+listening for input on port 7000...
+press ctrl-c to end</pre>
+[/test/a int32:123]
+[/test/b float32:1234.5]
+[/test/c OSC-string:`testtest']
+  .
+  .
+  .
+</pre>
+
+
+
+libraries
 ====
 libOSCConfig uses the following libraries.
 
