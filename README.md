@@ -92,7 +92,7 @@ oscdump.exe
 <pre>
 &gt; oscdump.exe
 listening for input on port 7000...
-press ctrl-c to end</pre>
+press ctrl-c to end
 [/test/a int32:123]
 [/test/b float32:1234.5]
 [/test/c OSC-string:`testtest']
