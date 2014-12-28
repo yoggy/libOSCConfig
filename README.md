@@ -81,7 +81,7 @@ sendosc.exe (get key-value)
 
       type : int, float, bool, string
       port : reply port
-      host : reply hostmame (or address)
+      host : reply hostname (or address)
 
   argument :
       arg0 (string)  the key of an element in the OSCConfig.
