@@ -56,13 +56,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBOSCCONFIG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\include;c:\local\boost_1_56_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;c:\local\boost_1_57_0</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zm150 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\;c:\local\boost_1_56_0\lib32-msvc-12.0</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\;c:\local\boost_1_57_0\lib32-msvc-12.0</AdditionalLibraryDirectories>
       <ImportLibrary>$(ProjectDir)..\..\lib\$(TargetName).lib</ImportLibrary>
     </Link>
     <BuildLog>
@@ -83,7 +83,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBOSCCONFIG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\include;c:\local\boost_1_56_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;c:\local\boost_1_57_0</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zm150 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -91,7 +91,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\;c:\local\boost_1_56_0\lib32-msvc-12.0</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\;c:\local\boost_1_57_0\lib32-msvc-12.0</AdditionalLibraryDirectories>
       <ImportLibrary>$(ProjectDir)..\..\lib\$(TargetName).lib</ImportLibrary>
     </Link>
     <BuildLog>
