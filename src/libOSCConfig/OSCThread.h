@@ -24,7 +24,6 @@ public:
 
 	virtual void ProcessPacket(const char *data, int size, const IpEndpointName& remoteEndpoint);
 	virtual void ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
-	virtual void ProcessMessage(const osc::ReceivedPacket &p, const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
 
 protected:
 	bool open_(const unsigned short &port);

@@ -111,16 +111,11 @@ void OSCThread::ProcessPacket(const char *data, int size, const IpEndpointName& 
 		ProcessBundle(osc::ReceivedBundle(p), remoteEndpoint);
 	}
 	else {
-		ProcessMessage(p, osc::ReceivedMessage(p), remoteEndpoint);
+		ProcessMessage(osc::ReceivedMessage(p), remoteEndpoint);
 	}
 }
 
 void OSCThread::ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
-{
-	// dummy...
-}
-
-void OSCThread::ProcessMessage(const osc::ReceivedPacket &p, const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
 {
 	try{
 		std::string path = std::string(msg.AddressPattern());
@@ -142,7 +137,7 @@ void OSCThread::ProcessMessage(const osc::ReceivedPacket &p, const osc::Received
 		std::string key = path;
 		osc::ReceivedMessage::const_iterator arg = msg.ArgumentsBegin();
 		if (arg == msg.ArgumentsEnd()) {
-			std::cout << get_local_time_str_() << ",error,recv invalid format packet...,from=" << get_address_str_(remoteEndpoint.address) << ":" << remoteEndpoint.port << "," << p;
+			std::cout << get_local_time_str_() << ",error,recv invalid format packet...,from=" << get_address_str_(remoteEndpoint.address) << ":" << remoteEndpoint.port;
 			return;
 		}
 
