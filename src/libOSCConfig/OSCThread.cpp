@@ -5,8 +5,8 @@
 
 std::string get_local_time_str_()
 {
-	boost::posix_time::ptime p = boost::posix_time::microsec_clock::universal_time();
-	return boost::posix_time::to_iso_extended_string(p) + "Z";
+	boost::posix_time::ptime p = boost::posix_time::microsec_clock::local_time();
+	return boost::posix_time::to_iso_extended_string(p);
 }
 
 std::string get_address_str_(const unsigned long &addr)
