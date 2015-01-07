@@ -93,6 +93,11 @@ bool OSCConfigImpl::has_key(const std::string &key)
 	return cf_.has_key(key);
 }
 
+void OSCConfigImpl::remove(const std::string &key)
+{
+	cf_.remove(key);
+}
+
 bool OSCConfigImpl::get_bool(const std::string &key, const bool &default_value)
 {
 	return cf_.get_bool(key, default_value);

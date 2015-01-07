@@ -24,6 +24,8 @@ public:
 
 	bool has_key(const std::string &key);
 
+	void remove(const std::string &key);
+
 	bool get_bool(const std::string &key, const bool &default_val = false);
 	void set_bool(const std::string &key, const bool &value); 
 

@@ -27,9 +27,11 @@ public:
 
 protected:
 	bool open_(const unsigned short &port);
-	void reply_config_key_value_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
-	void save_config_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
-	void load_config_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
+	void command_reply_config_key_value_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
+	void command_save_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
+	void command_load_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
+	void command_clear_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
+	void command_remove_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint);
 
 protected:
 	unsigned short port_;

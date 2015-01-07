@@ -107,6 +107,12 @@ bool Config::has_key(const std::string &key) {
 	return has_key_(key);
 }
 
+void Config::remove(const std::string &key)
+{
+	boost::mutex::scoped_lock scl(mutex_);
+	map_.erase(key);
+}
+
 bool Config::get_bool(const std::string &key, const bool &default_val) {
 	std::string val_str = get_string(key, boost::lexical_cast<std::string>(default_val));
 	return boost::lexical_cast<bool>(val_str);

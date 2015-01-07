@@ -62,6 +62,21 @@ LIB_OSCCONFIG_API bool OSCConfig::load()
 	return impl_->load();
 }
 
+LIB_OSCCONFIG_API void OSCConfig::clear()
+{
+	impl_->clear();
+}
+
+LIB_OSCCONFIG_API bool OSCConfig::has_key(const std::string &key)
+{
+	return impl_->has_key(key);
+}
+
+LIB_OSCCONFIG_API void OSCConfig::remove(const std::string &key)
+{
+	impl_->remove(key);
+}
+
 LIB_OSCCONFIG_API bool OSCConfig::get_bool(const std::string &key, const bool &default_value)
 {
 	return impl_->get_bool(key, default_value);

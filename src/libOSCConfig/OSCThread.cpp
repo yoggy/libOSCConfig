@@ -122,15 +122,23 @@ void OSCThread::ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpoint
 
 		// magic address pattern...
 		if (path.size() > 5 && path.substr(0, 5) == "/get/") {
-			reply_config_key_value_(msg, remoteEndpoint);
+			command_reply_config_key_value_(msg, remoteEndpoint);
 			return;
 		}
 		else if (path == "/save") {
-			save_config_(msg, remoteEndpoint);
+			command_save_(msg, remoteEndpoint);
 			return;
 		}
 		else if (path == "/load") {
-			load_config_(msg, remoteEndpoint);
+			command_load_(msg, remoteEndpoint);
+			return;
+		}
+		else if (path == "/clear") {
+			command_clear_(msg, remoteEndpoint);
+			return;
+		}
+		else if (path == "/remove") {
+			command_remove_(msg, remoteEndpoint);
 			return;
 		}
 
@@ -172,7 +180,7 @@ void OSCThread::ProcessMessage(const osc::ReceivedMessage& msg, const IpEndpoint
 //
 //   parameter       : arg0  string  (key)
 //
-void OSCThread::reply_config_key_value_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
+void OSCThread::command_reply_config_key_value_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
 {
 	try{
 		//
@@ -188,7 +196,7 @@ void OSCThread::reply_config_key_value_(const osc::ReceivedMessage& msg, const I
 		v.pop_front(); // v[0] is ""...
 
 		if (v.size() < 2) {
-			printf("OSCThread::reply_config_() : invalid address pattern...path=%s\n", path.c_str());
+			printf("OSCThread::command_reply_config_key_value_() : invalid address pattern...path=%s\n", path.c_str());
 			return;
 		}
 
@@ -214,7 +222,7 @@ void OSCThread::reply_config_key_value_(const osc::ReceivedMessage& msg, const I
 		//
 		osc::ReceivedMessage::const_iterator arg = msg.ArgumentsBegin();
 		if (arg == msg.ArgumentsEnd()) {
-			printf("OSCThread::reply_config_() : invalid argument packet...please set arg0 as the key string...\n", path.c_str());
+			printf("OSCThread::command_reply_config_key_value_() : invalid argument packet...please set arg0 as the key string...\n", path.c_str());
 			return;
 		}
 
@@ -223,7 +231,7 @@ void OSCThread::reply_config_key_value_(const osc::ReceivedMessage& msg, const I
 			key = arg->AsString();
 		}
 		else {
-			printf("OSCThread::reply_config_() : invalid argument typet...please set arg0 as the key string...\n", path.c_str());
+			printf("OSCThread::command_reply_config_key_value_() : invalid argument typet...please set arg0 as the key string...\n", path.c_str());
 			return;
 		}
 
@@ -256,7 +264,7 @@ void OSCThread::reply_config_key_value_(const osc::ReceivedMessage& msg, const I
 			// check buffer size...
 			int max_len = SEND_PACKET_BUF_SIZE - key.size() - 100;
 			if ((int)value.size() > max_len) {
-				printf("OSCThread::reply_config_() : warning! truncate large string value...value.size()=%d, max_len=%d\n", value.size(), max_len);
+				printf("OSCThread::command_reply_config_key_value_() : warning! truncate large string value...value.size()=%d, max_len=%d\n", value.size(), max_len);
 				value = value.substr(0, max_len);
 			}
 
@@ -275,14 +283,46 @@ void OSCThread::reply_config_key_value_(const osc::ReceivedMessage& msg, const I
 	}
 }
 
-void OSCThread::save_config_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
+void OSCThread::command_save_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
 {
 	bool rv = cf_->save();
 	printf("%s,debug,save,filename=%s,result=%s\n", get_local_time_str_().c_str(), cf_->filename().c_str(), rv ? "true" : "false");
 }
 
-void OSCThread::load_config_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
+void OSCThread::command_load_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
 {
 	bool rv = cf_->load();
 	printf("%s,debug,load,filename=%s,result=%s\n", get_local_time_str_().c_str(), cf_->filename().c_str(), rv ? "true" : "false");
+}
+
+void OSCThread::command_clear_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
+{
+	cf_->clear();
+	printf("%s,debug,clear\n", get_local_time_str_().c_str());
+}
+
+void OSCThread::command_remove_(const osc::ReceivedMessage& msg, const IpEndpointName& remoteEndpoint)
+{
+	try {
+		osc::ReceivedMessage::const_iterator arg = msg.ArgumentsBegin();
+		if (arg == msg.ArgumentsEnd()) {
+			printf("OSCThread::command_remove_config_() : invalid argument packet...please set arg0 as the key string...\n");
+			return;
+		}
+
+		std::string key;
+		if (arg->IsString()) {
+			key = arg->AsString();
+
+			cf_->remove(key);
+			printf("%s,debug,remove,key=%s\n", get_local_time_str_().c_str(), key.c_str());
+		}
+		else {
+			printf("OSCThread::command_remove_config_() : invalid argument packet...please set arg0 as the key string...\n");
+		}
+	}
+	catch (osc::Exception& e) {
+		printf("OSCThread::command_remove_config_() : osc::Exception!!!...e.what()=\n", e.what());
+	}
+
 }
